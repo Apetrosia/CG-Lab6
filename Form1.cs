@@ -106,7 +106,15 @@ namespace CG_Lab
             }
         }
 
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            numericUpDown12.Value = numericUpDown4.Value;
+            numericUpDown11.Value = numericUpDown5.Value;
+            numericUpDown4.Value = e.X;
+            numericUpDown5.Value = e.Y;
+        }
+
+        private void affineOpButton_Click(object sender, EventArgs e)
         {
             g.Clear(pictureBox1.BackColor);
 
@@ -137,13 +145,6 @@ namespace CG_Lab
                                                        .Moved(anchor.X, anchor.Y, anchor.Z));
                     break;
             }
-        }
-
-
-        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
-        {
-            numericUpDown4.Value = e.X;
-            numericUpDown5.Value = e.Y;
         }
     }
 
