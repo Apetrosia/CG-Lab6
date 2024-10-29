@@ -10,7 +10,7 @@ namespace CG_Lab
     {
         private enum RenderingOp { DrawCube = 0, DrawTetrahedron, DrawOctahedron, DrawIcosahedron, DrawDodecahedron }
 
-        private enum AffineOp { Move = 0, Scaling, Rotation }
+        private enum AffineOp { Move = 0, Scaling, Rotation, LineRotation, AxisRotation }
 
         Graphics g;
 
@@ -143,6 +143,16 @@ namespace CG_Lab
                                                        .Moved(-anchor.X, -anchor.Y, -anchor.Z)
                                                        .Rotated((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value)
                                                        .Moved(anchor.X, anchor.Y, anchor.Z));
+                    break;
+                case (int)AffineOp.LineRotation:
+                    anchor = new Vertex((float)numericUpDown4.Value, (float)numericUpDown5.Value, (float)numericUpDown6.Value);
+
+                    DrawPolyhedron(currentPolyhedron = currentPolyhedron
+                                                       .Moved(-anchor.X, -anchor.Y, -anchor.Z)
+                                                       .Rotated((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value)
+                                                       .Moved(anchor.X, anchor.Y, anchor.Z));
+                    break;
+                case (int)AffineOp.AxisRotation:
                     break;
             }
         }

@@ -159,12 +159,15 @@
             this.comboBox2.Items.AddRange(new object[] {
             "Смещение",
             "Масштабирование",
-            "Поворот"});
-            this.comboBox2.Location = new System.Drawing.Point(1185, 303);
+            "Поворот",
+            "Вращение вокруг прямой",
+            "Вращение вокруг оси"});
+            this.comboBox2.Location = new System.Drawing.Point(1113, 303);
             this.comboBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(180, 28);
+            this.comboBox2.Size = new System.Drawing.Size(318, 28);
             this.comboBox2.TabIndex = 5;
+            this.comboBox2.Text = "Смещение";
             // 
             // label1
             // 
@@ -262,6 +265,7 @@
             this.projectionListBox.Name = "projectionListBox";
             this.projectionListBox.Size = new System.Drawing.Size(180, 28);
             this.projectionListBox.TabIndex = 12;
+            this.projectionListBox.Text = "Перспективная";
             // 
             // numericUpDown7
             // 
