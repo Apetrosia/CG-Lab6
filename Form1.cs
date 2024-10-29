@@ -24,11 +24,11 @@ namespace CG_Lab
 
             g = Graphics.FromImage(pictureBox1.Image);
 
-            comboBox1.Items.Add("Отображение на XY");
-            comboBox1.Items.Add("Отображение на YZ");
-            comboBox1.Items.Add("Отображение на XZ");
+            reflectionComboBox.Items.Add("Отображение на XY");
+            reflectionComboBox.Items.Add("Отображение на YZ");
+            reflectionComboBox.Items.Add("Отображение на XZ");
 
-            comboBox1.SelectedIndex = 0;
+            reflectionComboBox.SelectedIndex = 0;
         }
 
         private PointF ProjectParallel(Vertex v)
@@ -84,15 +84,15 @@ namespace CG_Lab
             g.Dispose();
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void reflectionComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            numericUpDown1.Value = 1;
+            numericScale.Value = 1;
             g.Clear(Color.White);
             PolyHedron cube = PolyHedron.GetCube().Rotated(20, 20, 0)
                                                 .Scaled(100, 100, 100)
                                                 .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0);
             currPolyHedron = cube;
-            switch (comboBox1.SelectedIndex)
+            switch (reflectionComboBox.SelectedIndex)
             {
                 case (int)Operation.DrawCube:
                     DrawPolyhedron(cube, "XY");
@@ -115,7 +115,7 @@ namespace CG_Lab
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-            float scaleFactor = (float)numericUpDown1.Value;
+            float scaleFactor = (float)numericScale.Value;
             g.Clear(Color.White);
 
 
