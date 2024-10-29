@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.reflectionComboBox = new System.Windows.Forms.ComboBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
@@ -54,6 +55,8 @@
             this.numericUpDown10 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown11 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown12 = new System.Windows.Forms.NumericUpDown();
+            this.labelScale = new System.Windows.Forms.Label();
+            this.numericScale = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -67,12 +70,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown11)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown12)).BeginInit();
-            this.labelScale = new System.Windows.Forms.Label();
-            this.numericScale = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numericScale)).BeginInit();
             this.SuspendLayout();
             // 
-            // reflectionComboBox
+            // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
@@ -81,16 +82,20 @@
             "Отобразить октаэдр",
             "Отобразить икосаэдр",
             "Отобразить додекаэдр"});
-            this.comboBox1.Location = new System.Drawing.Point(1128, 18);
+            this.comboBox1.Location = new System.Drawing.Point(1119, 18);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(268, 28);
+            this.comboBox1.Size = new System.Drawing.Size(312, 28);
             this.comboBox1.TabIndex = 0;
+            this.comboBox1.Text = "Отобразить куб";
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // reflectionComboBox
+            // 
             this.reflectionComboBox.FormattingEnabled = true;
             this.reflectionComboBox.Items.AddRange(new object[] {
             "Нарисовать куб"});
-            this.reflectionComboBox.Location = new System.Drawing.Point(1119, 35);
+            this.reflectionComboBox.Location = new System.Drawing.Point(1120, 102);
             this.reflectionComboBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.reflectionComboBox.Name = "reflectionComboBox";
             this.reflectionComboBox.Size = new System.Drawing.Size(312, 28);
@@ -546,6 +551,7 @@
 
         #endregion
 
+        private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ComboBox reflectionComboBox;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.NumericUpDown numericUpDown1;

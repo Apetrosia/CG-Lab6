@@ -31,23 +31,23 @@ namespace CG_Lab
 
             g = Graphics.FromImage(pictureBox1.Image);
 
+            currentPolyhedron = PolyHedron.GetCube();
+
             reflectionComboBox.Items.Add("Отображение на XY");
             reflectionComboBox.Items.Add("Отображение на YZ");
             reflectionComboBox.Items.Add("Отображение на XZ");
 
-            reflectionComboBox.SelectedIndex = 0;
+            comboBox1.SelectedIndex = 0;
         }
 
         private PointF ProjectParallel(Vertex v)
         {
             return new PointF(v.X, v.Y);
         }
-       
+
         private void DrawPolyhedron(PolyHedron polyhedron, string plane)
         {
             float centerY = pictureBox1.Height / 2;
-
-            
 
             foreach (var face in polyhedron.Faces)
             {
@@ -61,26 +61,23 @@ namespace CG_Lab
                     switch (plane)
                     {
                         case "XY":
-                            projectedPoint = new PointF(v.X , v.Y );
+                            projectedPoint = new PointF(v.X, v.Y);
                             break;
                         case "YZ":
-                            projectedPoint = new PointF(v.Y , v.Z  + centerY);
+                            projectedPoint = new PointF(v.Y, v.Z + centerY);
                             break;
                         case "XZ":
-                            projectedPoint = new PointF(v.X , v.Z + centerY);
+                            projectedPoint = new PointF(v.X, v.Z + centerY);
                             break;
                         default:
                             throw new ArgumentException("Invalid plane. Use 'XY', 'YZ', or 'XZ'.");
                     }
                     points.Add(projectedPoint);
                 }
-                
 
-                
                 // g.FillPolygon(Brushes.Red, points.ToArray());
 
                 g.DrawPolygon(defaultPen, points.ToArray());
-
             }
 
             pictureBox1.Invalidate();
@@ -90,7 +87,7 @@ namespace CG_Lab
         {
             g.Dispose();
         }
-        
+
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -102,64 +99,57 @@ namespace CG_Lab
                     DrawPolyhedron(currentPolyhedron = PolyHedron.GetCube()
                                              .Rotated(20, 20, 0)
                                              .Scaled(100, 100, 100)
-                                             .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0)
-                                  );
-        
+                                             .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0),
+                                             currPlane);
+                    break;
                 case (int)RenderingOp.DrawTetrahedron:
                     DrawPolyhedron(currentPolyhedron = PolyHedron.GetTetrahedron()
                                              .Rotated(10, 10, 0)
                                              .Scaled(100, 100, 100)
-                                             .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0)
-                                  );
+                                             .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0),
+                                             currPlane);
                     break;
                 case (int)RenderingOp.DrawOctahedron:
                     DrawPolyhedron(currentPolyhedron = PolyHedron.GetOctahedron()
                                              .Rotated(20, 20, 0)
                                              .Scaled(100, 100, 100)
-                                             .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0)
-                                  );
+                                             .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0),
+                                             currPlane);
                     break;
                 case (int)RenderingOp.DrawIcosahedron:
                     DrawPolyhedron(currentPolyhedron = PolyHedron.GetIcosahedron()
                                              .Rotated(10, 10, 0)
                                              .Scaled(150, 150, 150)
-                                             .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0)
-                                  );
+                                             .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0),
+                                             currPlane);
                     break;
                 case (int)RenderingOp.DrawDodecahedron:
                     DrawPolyhedron(currentPolyhedron = PolyHedron.GetDodecahedron()
                                              .Rotated(10, 10, 0)
                                              .Scaled(200, 200, 200)
-                                             .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0)
-                                  );
-                    break;                   
+                                             .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0),
+                                             currPlane);
+                    break;
             }
         }
 
         private void reflectionComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             numericScale.Value = 1;
-            g.Clear(Color.White);
-            PolyHedron cube = PolyHedron.GetCube().Rotated(20, 20, 0)
-                                                .Scaled(100, 100, 100)
-                                                .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0);
-            currPolyHedron = cube;
+            g.Clear(pictureBox1.BackColor);
+
             switch (reflectionComboBox.SelectedIndex)
             {
-                case (int)Operation.DrawCube:
-                    DrawPolyhedron(cube, "XY");
-                    currPlane = "XY";
-                    break;
                 case (int)Operation.Reflect_XY:
-                    DrawPolyhedron(cube, "XY");
+                    DrawPolyhedron(currentPolyhedron, "XY");
                     currPlane = "XY";
                     break;
                 case (int)Operation.Reflect_YZ:
-                    DrawPolyhedron(cube, "YZ");
+                    DrawPolyhedron(currentPolyhedron, "YZ");
                     currPlane = "YZ";
                     break;
                 case (int)Operation.Reflect_XZ:
-                    DrawPolyhedron(cube, "XZ");
+                    DrawPolyhedron(currentPolyhedron, "XZ");
                     currPlane = "XZ";
                     break;
             }
@@ -183,7 +173,8 @@ namespace CG_Lab
             {
                 case (int)AffineOp.Move:
                     DrawPolyhedron(currentPolyhedron = currentPolyhedron
-                                                       .Moved((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value));
+                                                       .Moved((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value),
+                                                       currPlane);
                     break;
                 case (int)AffineOp.Scaling:
                     anchor = new Vertex((float)numericUpDown4.Value, (float)numericUpDown5.Value, (float)numericUpDown6.Value);
@@ -191,7 +182,8 @@ namespace CG_Lab
                     DrawPolyhedron(currentPolyhedron = currentPolyhedron
                                                        .Moved(-anchor.X, -anchor.Y, -anchor.Z)
                                                        .Scaled((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value)
-                                                       .Moved(anchor.X, anchor.Y, anchor.Z));
+                                                       .Moved(anchor.X, anchor.Y, anchor.Z),
+                                                       currPlane);
 
                     break;
 
@@ -201,7 +193,8 @@ namespace CG_Lab
                     DrawPolyhedron(currentPolyhedron = currentPolyhedron
                                                        .Moved(-anchor.X, -anchor.Y, -anchor.Z)
                                                        .Rotated((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value)
-                                                       .Moved(anchor.X, anchor.Y, anchor.Z));
+                                                       .Moved(anchor.X, anchor.Y, anchor.Z),
+                                                       currPlane);
                     break;
                 case (int)AffineOp.LineRotation:
                     anchor = new Vertex((float)numericUpDown4.Value, (float)numericUpDown5.Value, (float)numericUpDown6.Value);
@@ -209,7 +202,8 @@ namespace CG_Lab
                     DrawPolyhedron(currentPolyhedron = currentPolyhedron
                                                        .Moved(-anchor.X, -anchor.Y, -anchor.Z)
                                                        .Rotated((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value)
-                                                       .Moved(anchor.X, anchor.Y, anchor.Z));
+                                                       .Moved(anchor.X, anchor.Y, anchor.Z),
+                                                       currPlane);
                     break;
                 case (int)AffineOp.AxisRotation:
                     break;
@@ -223,35 +217,35 @@ namespace CG_Lab
 
 
             PolyHedron cube = currPolyHedron;
-            
+
 
             cube = cube.ScaledAroundCenter(scaleFactor, scaleFactor, scaleFactor);
             DrawPolyhedron(cube, currPlane);
         }
     }
 
-    public class Matrix<T> where T : struct, IConvertible 
+    public class Matrix<T> where T : struct, IConvertible
+    {
+        public T[,] Values { get; }
+
+        public Matrix(T[,] values)
         {
-            public T[,] Values { get; }
+            Values = values;
+        }
 
-            public Matrix(T[,] values)
-            {
-                Values = values;
-            }
+        public static implicit operator Matrix<T>(T[,] values)
+        {
+            return new Matrix<T>(values);
+        }
 
-            public static implicit operator Matrix<T>(T[,] values)
-            {
-                return new Matrix<T>(values);
-            }
+        public static implicit operator Vertex(Matrix<T> m)
+        {
+            return new Vertex(Convert.ToSingle(m[0, 0]), Convert.ToSingle(m[0, 1]), Convert.ToSingle(m[0, 2]));
+        }
 
-            public static implicit operator Vertex(Matrix<T> m)
-            {
-                return new Vertex(Convert.ToSingle(m[0, 0]), Convert.ToSingle(m[0, 1]), Convert.ToSingle(m[0, 2]));
-            }
-
-            public Matrix(Vertex vertex)
-            {
-                Values = new T[1, 4] {
+        public Matrix(Vertex vertex)
+        {
+            Values = new T[1, 4] {
                   {
                     (T)Convert.ChangeType(vertex.X, typeof(T)),
                     (T)Convert.ChangeType(vertex.Y, typeof(T)),
@@ -259,241 +253,265 @@ namespace CG_Lab
                     (T)Convert.ChangeType(1, typeof(T))
                   }
             };
-            }
+        }
 
-            public static implicit operator Matrix<T>(Vertex vertex)
+        public static implicit operator Matrix<T>(Vertex vertex)
+        {
+            return new Matrix<T>(vertex);
+        }
+
+        public static Matrix<T> operator *(Matrix<T> A, Matrix<T> B)
+        {
+            int rowsA = A.Values.GetLength(0);
+            int colsA = A.Values.GetLength(1);
+            int rowsB = B.Values.GetLength(0);
+            int colsB = B.Values.GetLength(1);
+
+            T[,] result = new T[rowsA, colsB];
+
+            for (int i = 0; i < rowsA; i++)
             {
-                return new Matrix<T>(vertex);
-            }
-
-            public static Matrix<T> operator *(Matrix<T> A, Matrix<T> B)
-            {
-                int rowsA = A.Values.GetLength(0);
-                int colsA = A.Values.GetLength(1);
-                int rowsB = B.Values.GetLength(0);
-                int colsB = B.Values.GetLength(1);
-
-                T[,] result = new T[rowsA, colsB];
-
-                for (int i = 0; i < rowsA; i++)
+                for (int j = 0; j < colsB; j++)
                 {
-                    for (int j = 0; j < colsB; j++)
+                    result[i, j] = default;
+                    for (int k = 0; k < colsA; k++)
                     {
-                        result[i, j] = default;
-                        for (int k = 0; k < colsA; k++)
-                        {
-                            result[i, j] += (dynamic)A.Values[i, k] * (dynamic)B.Values[k, j];
-                        }
+                        result[i, j] += (dynamic)A.Values[i, k] * (dynamic)B.Values[k, j];
                     }
                 }
-
-                return new Matrix<T>(result);
             }
 
-            public T this[int row, int column]
-            {
-                get
-                {
-                    return Values[row, column];
-                }
-                set
-                {
-                    Values[row, column] = value;
-                }
-            }
-
-
+            return new Matrix<T>(result);
         }
 
-        public struct Vertex
+        public T this[int row, int column]
         {
-            public float X { get; private set; }
-
-            public float Y { get; private set; }
-
-            public float Z { get; private set; }
-
-            public Vertex(float x, float y, float z)
+            get
             {
-                X = x;
-                Y = y;
-                Z = z;
+                return Values[row, column];
+            }
+            set
+            {
+                Values[row, column] = value;
             }
         }
 
-        public class Face
-        {
-            public int[] Vertices { get; private set; }
 
-            public Face(params int[] vertices)
-            {
-                Vertices = vertices;
-            }
+    }
+
+    public struct Vertex
+    {
+        public float X { get; private set; }
+
+        public float Y { get; private set; }
+
+        public float Z { get; private set; }
+
+        public Vertex(float x, float y, float z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+        }
+        public float DistanceTo(in Vertex other)
+        {
+            float xDelta = X - other.X;
+            float yDelta = Y - other.Y;
+            float zDelta = Z - other.Z;
+
+            return (float)Math.Sqrt(xDelta * xDelta + yDelta * yDelta + zDelta * zDelta);
+        }
+    }
+
+    public class Face
+    {
+        public int[] Vertices { get; private set; }
+
+        public Face(params int[] vertices)
+        {
+            Vertices = vertices;
+        }
+    }
+
+    public class PolyHedron
+    {
+        public List<Face> Faces { get; private set; }
+
+        public List<Vertex> Vertices { get; private set; }
+
+        public PolyHedron()
+        {
+            Faces = new List<Face>();
+            Vertices = new List<Vertex>();
         }
 
-        public class PolyHedron
+        public PolyHedron(List<Face> faces, List<Vertex> vertices)
         {
-            public List<Face> Faces { get; private set; }
+            Faces = faces;
+            Vertices = vertices;
+        }
 
-            public List<Vertex> Vertices { get; private set; }
-
-            public PolyHedron()
+        public void FindCenter(List<Vertex> vertices, ref double a, ref double b, ref double c)
+        {
+            a = 0;
+            b = 0;
+            c = 0;
+            foreach (var vertex in vertices)
             {
-                Faces = new List<Face>();
-                Vertices = new List<Vertex>();
+                a += vertex.X;
+                b += vertex.Y;
+                c += vertex.Z;
             }
 
-            public PolyHedron(List<Face> faces, List<Vertex> vertices)
-            {
-                Faces = faces;
-                Vertices = vertices;
-            }
+            a /= vertices.Count;
+            b /= vertices.Count;
+            c /= vertices.Count;
+        }
+        public PolyHedron Scaled(float c1, float c2, float c3)
+        {
+            var newPoly = this.Clone();
 
-            public PolyHedron Scaled(float c1, float c2, float c3)
+            Matrix<float> translationMatrix = new float[4, 4]
             {
-                var newPoly = this.Clone();
-
-                Matrix<float> translationMatrix = new float[4, 4]
-                {
                 { c1, 0,  0,  0 },
                 { 0,  c2, 0,  0 },
                 { 0,  0,  c3, 0 },
                 { 0,  0,  0,  1 }
-                };
+            };
 
-                for (int i = 0; i < newPoly.Vertices.Count; i++)
-                {
-                    newPoly.Vertices[i] *= translationMatrix;
-                }
-
-                return newPoly;
+            for (int i = 0; i < newPoly.Vertices.Count; i++)
+            {
+                newPoly.Vertices[i] *= translationMatrix;
             }
 
-            public PolyHedron Moved(float a, float b, float c)
-            {
-                var newPoly = this.Clone();
+            return newPoly;
+        }
 
-                Matrix<float> translationMatrix = new float[4, 4]
-                {
+        public PolyHedron Moved(float a, float b, float c)
+        {
+            var newPoly = this.Clone();
+
+            Matrix<float> translationMatrix = new float[4, 4]
+            {
                 { 1,  0,  0,  0 },
                 { 0,  1,  0,  0 },
                 { 0,  0,  1,  0 },
                 { a,  b,  c,  1 }
-                };
+            };
 
-                for (int i = 0; i < newPoly.Vertices.Count; i++)
-                {
-                    newPoly.Vertices[i] *= translationMatrix;
-                }
-
-                return newPoly;
+            for (int i = 0; i < newPoly.Vertices.Count; i++)
+            {
+                newPoly.Vertices[i] *= translationMatrix;
             }
 
-            public PolyHedron RotatedXAxis(float alpha)
+            return newPoly;
+        }
+
+        public PolyHedron RotatedXAxis(float alpha)
+        {
+            var newPoly = this.Clone();
+
+            double angleRadians = (double)alpha * (Math.PI / 180);
+
+            float cos = (float)Math.Cos(angleRadians);
+            float sin = (float)Math.Sin(angleRadians);
+
+            Matrix<float> translationMatrix = new float[4, 4]
             {
-                var newPoly = this.Clone();
-
-                double angleRadians = (double)alpha * (Math.PI / 180);
-
-                float cos = (float)Math.Cos(angleRadians);
-                float sin = (float)Math.Sin(angleRadians);
-
-                Matrix<float> translationMatrix = new float[4, 4]
-                {
                 { 1,  0,  0,  0 },
                 { 0,  cos, sin,  0 },
                 { 0,  -sin,  cos,  0 },
                 { 0,  0,  0,  1 }
-                };
+            };
 
-                for (int i = 0; i < newPoly.Vertices.Count; i++)
-                {
-                    newPoly.Vertices[i] *= translationMatrix;
-                }
-
-                return newPoly;
+            for (int i = 0; i < newPoly.Vertices.Count; i++)
+            {
+                newPoly.Vertices[i] *= translationMatrix;
             }
 
-            public PolyHedron RotatedYAxis(float alpha)
+            return newPoly;
+        }
+
+        public PolyHedron RotatedYAxis(float alpha)
+        {
+            var newPoly = this.Clone();
+
+            double angleRadians = (double)alpha * (Math.PI / 180);
+
+            float cos = (float)Math.Cos(angleRadians);
+            float sin = (float)Math.Sin(angleRadians);
+
+            Matrix<float> translationMatrix = new float[4, 4]
             {
-                var newPoly = this.Clone();
-
-                double angleRadians = (double)alpha * (Math.PI / 180);
-
-                float cos = (float)Math.Cos(angleRadians);
-                float sin = (float)Math.Sin(angleRadians);
-
-                Matrix<float> translationMatrix = new float[4, 4]
-                {
                 { cos,  0,  -sin,  0 },
                 { 0,  1, 0,  0 },
                 { sin,  0,  cos,  0 },
                 { 0,  0,  0,  1 }
-                };
+            };
 
-                for (int i = 0; i < newPoly.Vertices.Count; i++)
-                {
-                    newPoly.Vertices[i] *= translationMatrix;
-                }
-
-                return newPoly;
+            for (int i = 0; i < newPoly.Vertices.Count; i++)
+            {
+                newPoly.Vertices[i] *= translationMatrix;
             }
 
-            public PolyHedron RotatedZAxis(float alpha)
+            return newPoly;
+        }
+
+        public PolyHedron RotatedZAxis(float alpha)
+        {
+            var newPoly = this.Clone();
+
+            double angleRadians = (double)alpha * (Math.PI / 180);
+
+            float cos = (float)Math.Cos(angleRadians);
+            float sin = (float)Math.Sin(angleRadians);
+
+            Matrix<float> translationMatrix = new float[4, 4]
             {
-                var newPoly = this.Clone();
-
-                double angleRadians = (double)alpha * (Math.PI / 180);
-
-                float cos = (float)Math.Cos(angleRadians);
-                float sin = (float)Math.Sin(angleRadians);
-
-                Matrix<float> translationMatrix = new float[4, 4]
-                {
                 { cos,  sin,  0,  0 },
                 { -sin, cos, 0,  0 },
                 { 0,  0,  1,  0 },
                 { 0,  0,  0,  1 }
-                };
+            };
 
-                for (int i = 0; i < newPoly.Vertices.Count; i++)
-                {
-                    newPoly.Vertices[i] *= translationMatrix;
-                }
-
-                return newPoly;
-            }
-
-            public PolyHedron Rotated(float xAngle, float yAngle, float zAngle)
+            for (int i = 0; i < newPoly.Vertices.Count; i++)
             {
-                return this.Clone()
-                    .RotatedXAxis(xAngle)
-                    .RotatedYAxis(yAngle)
-                    .RotatedZAxis(zAngle);
+                newPoly.Vertices[i] *= translationMatrix;
             }
 
-            public static PolyHedron GetCube()
-            {
-                var cube = new PolyHedron();
+            return newPoly;
+        }
 
-                cube.Vertices.Add(new Vertex(-1, -1, -1));
-                cube.Vertices.Add(new Vertex(1, -1, -1));
-                cube.Vertices.Add(new Vertex(1, 1, -1));
-                cube.Vertices.Add(new Vertex(-1, 1, -1));
-                cube.Vertices.Add(new Vertex(-1, -1, 1));
-                cube.Vertices.Add(new Vertex(1, -1, 1));
-                cube.Vertices.Add(new Vertex(1, 1, 1));
-                cube.Vertices.Add(new Vertex(-1, 1, 1));
+        public PolyHedron Rotated(float xAngle, float yAngle, float zAngle)
+        {
+            return this.Clone()
+                .RotatedXAxis(xAngle)
+                .RotatedYAxis(yAngle)
+                .RotatedZAxis(zAngle);
+        }
 
-                cube.Faces.Add(new Face( 0, 1, 2, 3 ));
-                cube.Faces.Add(new Face( 4, 5, 6, 7 )); 
-                cube.Faces.Add(new Face( 0, 1, 5, 4 ));
-                cube.Faces.Add(new Face( 3, 2, 6, 7 )); 
-                cube.Faces.Add(new Face( 1, 2, 6, 5 )); 
-                cube.Faces.Add(new Face( 0, 3, 7, 4 ));
-                
-                return cube;
-            }
+        public static PolyHedron GetCube()
+        {
+            var cube = new PolyHedron();
+
+            cube.Vertices.Add(new Vertex(-1, -1, -1));
+            cube.Vertices.Add(new Vertex(1, -1, -1));
+            cube.Vertices.Add(new Vertex(1, 1, -1));
+            cube.Vertices.Add(new Vertex(-1, 1, -1));
+            cube.Vertices.Add(new Vertex(-1, -1, 1));
+            cube.Vertices.Add(new Vertex(1, -1, 1));
+            cube.Vertices.Add(new Vertex(1, 1, 1));
+            cube.Vertices.Add(new Vertex(-1, 1, 1));
+
+            cube.Faces.Add(new Face(0, 1, 2, 3));
+            cube.Faces.Add(new Face(4, 5, 6, 7));
+            cube.Faces.Add(new Face(0, 1, 5, 4));
+            cube.Faces.Add(new Face(3, 2, 6, 7));
+            cube.Faces.Add(new Face(1, 2, 6, 5));
+            cube.Faces.Add(new Face(0, 3, 7, 4));
+
+            return cube;
+        }
 
         public static PolyHedron GetTetrahedron()
         {
@@ -654,124 +672,124 @@ namespace CG_Lab
         public Vertex GetFaceCenter(Face face)
         {
             float x = 0, y = 0, z = 0;
-            
+
             foreach (int vertexIndex in face.Vertices)
             {
                 x += Vertices[vertexIndex].X;
                 y += Vertices[vertexIndex].Y;
                 z += Vertices[vertexIndex].Z;
             }
-            
+
             return new Vertex(x / face.Vertices.Length, y / face.Vertices.Length, z / face.Vertices.Length);
         }
 
         public PolyHedron Clone()
         {
             var newPoly = new PolyHedron(this.Faces, new List<Vertex>(this.Vertices));
-                return newPoly;
-            }
-            public PolyHedron Reflected(string plane)
+            return newPoly;
+        }
+        public PolyHedron Reflected(string plane)
+        {
+            var newPoly = this.Clone();
+
+            Matrix<float> reflectionMatrix;
+
+            switch (plane.ToUpper())
             {
-                var newPoly = this.Clone();
-
-                Matrix<float> reflectionMatrix;
-
-                switch (plane.ToUpper())
-                {
-                    case "XY":
-                        reflectionMatrix = new float[4, 4]
-                        {
+                case "XY":
+                    reflectionMatrix = new float[4, 4]
+                    {
                 { 1,  0,  0,  0 },
                 { 0,  1,  0,  0 },
                 { 0,  0, -1,  0 },
                 { 0,  0,  0,  1 }
-                        };
-                        break;
+                    };
+                    break;
 
-                    case "YZ":
-                        reflectionMatrix = new float[4, 4]
-                        {
+                case "YZ":
+                    reflectionMatrix = new float[4, 4]
+                    {
                 { -1,  0,  0,  0 },
                 { 0,  1,  0,  0 },
                 { 0,  0,  1,  0 },
                 { 0,  0,  0,  1 }
-                        };
-                        break;
+                    };
+                    break;
 
-                    case "XZ":
-                        reflectionMatrix = new float[4, 4]
-                        {
+                case "XZ":
+                    reflectionMatrix = new float[4, 4]
+                    {
                 { 1,  0,  0,  0 },
                 { 0, -1,  0,  0 },
                 { 0,  0,  1,  0 },
                 { 0,  0,  0,  1 }
-                        };
-                        break;
+                    };
+                    break;
 
-                    default:
-                        throw new ArgumentException("Invalid plane. Use 'XY', 'YZ', or 'XZ'.");
-                }
-
-                // Применяем матрицу отражения ко всем вершинам многогранника
-                for (int i = 0; i < newPoly.Vertices.Count; i++)
-                {
-                    newPoly.Vertices[i] *= reflectionMatrix;
-                }
-
-                return newPoly;
+                default:
+                    throw new ArgumentException("Invalid plane. Use 'XY', 'YZ', or 'XZ'.");
             }
 
-            public PolyHedron ScaledAroundCenter(float scaleX, float scaleY, float scaleZ)
+            // Применяем матрицу отражения ко всем вершинам многогранника
+            for (int i = 0; i < newPoly.Vertices.Count; i++)
             {
-                var newPoly = this.Clone();
+                newPoly.Vertices[i] *= reflectionMatrix;
+            }
 
-                // Шаг 1: Находим центр многогранника
-                double centerX = 0, centerY = 0, centerZ = 0;
-                FindCenter(newPoly.Vertices, ref centerX, ref centerY, ref centerZ);
+            return newPoly;
+        }
 
-                // Шаг 2: Перемещаем многогранник так, чтобы его центр оказался в начале координат
-                Matrix<float> moveToOriginMatrix = new float[4, 4]
-                {
+        public PolyHedron ScaledAroundCenter(float scaleX, float scaleY, float scaleZ)
+        {
+            var newPoly = this.Clone();
+
+            // Шаг 1: Находим центр многогранника
+            double centerX = 0, centerY = 0, centerZ = 0;
+            FindCenter(newPoly.Vertices, ref centerX, ref centerY, ref centerZ);
+
+            // Шаг 2: Перемещаем многогранник так, чтобы его центр оказался в начале координат
+            Matrix<float> moveToOriginMatrix = new float[4, 4]
+            {
         { 1, 0, 0, 0 },
         { 0, 1, 0, 0 },
         { 0, 0, 1, 0 },
         { (float)-centerX, (float)-centerY, (float)-centerZ, 1 }
-                };
+            };
 
-                for (int i = 0; i < newPoly.Vertices.Count; i++)
-                {
-                    newPoly.Vertices[i] *= moveToOriginMatrix;
-                }
+            for (int i = 0; i < newPoly.Vertices.Count; i++)
+            {
+                newPoly.Vertices[i] *= moveToOriginMatrix;
+            }
 
-                // Шаг 3: Выполняем масштабирование
-                Matrix<float> scalingMatrix = new float[4, 4]
-                {
+            // Шаг 3: Выполняем масштабирование
+            Matrix<float> scalingMatrix = new float[4, 4]
+            {
         { scaleX, 0, 0, 0 },
         { 0, scaleY, 0, 0 },
         { 0, 0, scaleZ, 0 },
         { 0, 0, 0, 1 }
-                };
+            };
 
-                for (int i = 0; i < newPoly.Vertices.Count; i++)
-                {
-                    newPoly.Vertices[i] *= scalingMatrix;
-                }
+            for (int i = 0; i < newPoly.Vertices.Count; i++)
+            {
+                newPoly.Vertices[i] *= scalingMatrix;
+            }
 
-                // Шаг 4: Перемещаем многогранник обратно в исходное положение
-                Matrix<float> moveBackMatrix = new float[4, 4]
-                {
+            // Шаг 4: Перемещаем многогранник обратно в исходное положение
+            Matrix<float> moveBackMatrix = new float[4, 4]
+            {
         { 1, 0, 0, 0 },
         { 0, 1, 0, 0 },
         { 0, 0, 1, 0 },
         { (float)centerX, (float)centerY, (float)centerZ, 1 }
-                };
+            };
 
-                for (int i = 0; i < newPoly.Vertices.Count; i++)
-                {
-                    newPoly.Vertices[i] *= moveBackMatrix;
-                }
+            for (int i = 0; i < newPoly.Vertices.Count; i++)
+            {
+                newPoly.Vertices[i] *= moveBackMatrix;
+            }
 
-                return newPoly;
-            }    
-        }   
+            return newPoly;
+        }
+    }
 }
