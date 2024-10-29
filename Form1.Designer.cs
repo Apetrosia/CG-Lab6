@@ -42,9 +42,9 @@
             this.button1 = new System.Windows.Forms.Button();
             this.projectionButton = new System.Windows.Forms.Button();
             this.projectionListBox = new System.Windows.Forms.ComboBox();
-            this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown8 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown9 = new System.Windows.Forms.NumericUpDown();
+            this.axisXNumeric = new System.Windows.Forms.NumericUpDown();
+            this.axisYNumeric = new System.Windows.Forms.NumericUpDown();
+            this.axisZNumeric = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -64,9 +64,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.axisXNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.axisYNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.axisZNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown11)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown12)).BeginInit();
@@ -108,7 +108,7 @@
             this.pictureBox1.Location = new System.Drawing.Point(15, 2);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1093, 920);
+            this.pictureBox1.Size = new System.Drawing.Size(1094, 920);
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
@@ -270,12 +270,14 @@
             this.projectionButton.TabIndex = 11;
             this.projectionButton.Text = "Применить";
             this.projectionButton.UseVisualStyleBackColor = true;
+            this.projectionButton.Click += new System.EventHandler(this.projectionButton_Click);
             // 
             // projectionListBox
             // 
             this.projectionListBox.FormattingEnabled = true;
             this.projectionListBox.Items.AddRange(new object[] {
             "Перспективная",
+            "Ортографическая",
             "Аксонометрическая"});
             this.projectionListBox.Location = new System.Drawing.Point(1185, 611);
             this.projectionListBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -284,62 +286,65 @@
             this.projectionListBox.TabIndex = 12;
             this.projectionListBox.Text = "Перспективная";
             // 
-            // numericUpDown7
+            // axisXNumeric
             // 
-            this.numericUpDown7.DecimalPlaces = 2;
-            this.numericUpDown7.Location = new System.Drawing.Point(1139, 679);
-            this.numericUpDown7.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.numericUpDown7.Maximum = new decimal(new int[] {
+            this.axisXNumeric.DecimalPlaces = 2;
+            this.axisXNumeric.Location = new System.Drawing.Point(1139, 679);
+            this.axisXNumeric.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.axisXNumeric.Maximum = new decimal(new int[] {
             360,
             0,
             0,
             0});
-            this.numericUpDown7.Minimum = new decimal(new int[] {
+            this.axisXNumeric.Minimum = new decimal(new int[] {
             360,
             0,
             0,
             -2147483648});
-            this.numericUpDown7.Name = "numericUpDown7";
-            this.numericUpDown7.Size = new System.Drawing.Size(90, 26);
-            this.numericUpDown7.TabIndex = 15;
+            this.axisXNumeric.Name = "axisXNumeric";
+            this.axisXNumeric.Size = new System.Drawing.Size(90, 26);
+            this.axisXNumeric.TabIndex = 15;
+            this.axisXNumeric.ValueChanged += new System.EventHandler(this.axisXNumeric_ValueChanged);
             // 
-            // numericUpDown8
+            // axisYNumeric
             // 
-            this.numericUpDown8.DecimalPlaces = 2;
-            this.numericUpDown8.Location = new System.Drawing.Point(1239, 679);
-            this.numericUpDown8.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.numericUpDown8.Maximum = new decimal(new int[] {
+            this.axisYNumeric.DecimalPlaces = 2;
+            this.axisYNumeric.Location = new System.Drawing.Point(1239, 679);
+            this.axisYNumeric.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.axisYNumeric.Maximum = new decimal(new int[] {
             360,
             0,
             0,
             0});
-            this.numericUpDown8.Minimum = new decimal(new int[] {
+            this.axisYNumeric.Minimum = new decimal(new int[] {
             360,
             0,
             0,
             -2147483648});
-            this.numericUpDown8.Name = "numericUpDown8";
-            this.numericUpDown8.Size = new System.Drawing.Size(88, 26);
-            this.numericUpDown8.TabIndex = 14;
+            this.axisYNumeric.Name = "axisYNumeric";
+            this.axisYNumeric.Size = new System.Drawing.Size(88, 26);
+            this.axisYNumeric.TabIndex = 14;
+            this.axisYNumeric.ValueChanged += new System.EventHandler(this.axisYNumeric_ValueChanged);
             // 
-            // numericUpDown9
+            // axisZNumeric
             // 
-            this.numericUpDown9.DecimalPlaces = 2;
-            this.numericUpDown9.Location = new System.Drawing.Point(1336, 679);
-            this.numericUpDown9.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.numericUpDown9.Maximum = new decimal(new int[] {
+            this.axisZNumeric.DecimalPlaces = 2;
+            this.axisZNumeric.Location = new System.Drawing.Point(1336, 679);
+            this.axisZNumeric.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.axisZNumeric.Maximum = new decimal(new int[] {
             360,
             0,
             0,
             0});
-            this.numericUpDown9.Minimum = new decimal(new int[] {
+            this.axisZNumeric.Minimum = new decimal(new int[] {
             360,
             0,
             0,
             -2147483648});
-            this.numericUpDown9.Name = "numericUpDown9";
-            this.numericUpDown9.Size = new System.Drawing.Size(86, 26);
-            this.numericUpDown9.TabIndex = 13;
+            this.axisZNumeric.Name = "axisZNumeric";
+            this.axisZNumeric.ReadOnly = true;
+            this.axisZNumeric.Size = new System.Drawing.Size(86, 26);
+            this.axisZNumeric.TabIndex = 13;
             // 
             // label2
             // 
@@ -508,9 +513,9 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.numericUpDown7);
-            this.Controls.Add(this.numericUpDown8);
-            this.Controls.Add(this.numericUpDown9);
+            this.Controls.Add(this.axisXNumeric);
+            this.Controls.Add(this.axisYNumeric);
+            this.Controls.Add(this.axisZNumeric);
             this.Controls.Add(this.projectionListBox);
             this.Controls.Add(this.projectionButton);
             this.Controls.Add(this.button1);
@@ -537,9 +542,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.axisXNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.axisYNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.axisZNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown11)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown12)).EndInit();
@@ -565,9 +570,9 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button projectionButton;
         private System.Windows.Forms.ComboBox projectionListBox;
-        private System.Windows.Forms.NumericUpDown numericUpDown7;
-        private System.Windows.Forms.NumericUpDown numericUpDown8;
-        private System.Windows.Forms.NumericUpDown numericUpDown9;
+        private System.Windows.Forms.NumericUpDown axisXNumeric;
+        private System.Windows.Forms.NumericUpDown axisYNumeric;
+        private System.Windows.Forms.NumericUpDown axisZNumeric;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms.VisualStyles;
 using static System.Windows.Forms.AxHost;
+using System.Drawing.Drawing2D;
 
 namespace CG_Lab
 {
@@ -19,6 +20,7 @@ namespace CG_Lab
         Graphics g;
 
         string currPlane = "XY";
+        int currProj = 1;
         Pen defaultPen = new Pen(Color.Black, 3);
 
         PolyHedron currentPolyhedron;
@@ -45,7 +47,7 @@ namespace CG_Lab
             return new PointF(v.X, v.Y);
         }
 
-        private void DrawPolyhedron(PolyHedron polyhedron, string plane)
+        private void DrawPolyhedron(PolyHedron polyhedron, string plane, int proj = 0)
         {
             float centerY = pictureBox1.Height / 2;
 
@@ -56,22 +58,25 @@ namespace CG_Lab
                 foreach (var vertexIndex in face.Vertices)
                 {
                     Vertex v = polyhedron.Vertices[vertexIndex];
+
                     //points.Add(ProjectParallel(v));
-                    PointF projectedPoint;
+                    Vertex projectedVertex;
                     switch (plane)
                     {
                         case "XY":
-                            projectedPoint = new PointF(v.X, v.Y);
+                            projectedVertex = new Vertex(v.X, v.Y, v.Z);
                             break;
                         case "YZ":
-                            projectedPoint = new PointF(v.Y, v.Z + centerY);
+                            projectedVertex = new Vertex(v.Y, v.Z + centerY, v.X);
                             break;
                         case "XZ":
-                            projectedPoint = new PointF(v.X, v.Z + centerY);
+                            projectedVertex = new Vertex(v.X, v.Z + centerY, v.Z);
                             break;
                         default:
                             throw new ArgumentException("Invalid plane. Use 'XY', 'YZ', or 'XZ'.");
                     }
+                    //PointF projectedPoint = new PointF(projectedVertex.X, projectedVertex.Y);
+                    PointF projectedPoint = projectedVertex.GetProjection(projectionListBox.SelectedIndex, pictureBox1.Width / 2, pictureBox1.Height / 2);
                     points.Add(projectedPoint);
                 }
 
@@ -222,6 +227,21 @@ namespace CG_Lab
             cube = cube.ScaledAroundCenter(scaleFactor, scaleFactor, scaleFactor);
             DrawPolyhedron(cube, currPlane);
         }
+
+        private void axisXNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            axisZNumeric.Value = 360 - axisXNumeric.Value - axisYNumeric.Value;
+        }
+
+        private void axisYNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            axisZNumeric.Value = 360 - axisXNumeric.Value - axisYNumeric.Value;
+        }
+
+        private void projectionButton_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public class Matrix<T> where T : struct, IConvertible
@@ -320,6 +340,34 @@ namespace CG_Lab
             float zDelta = Z - other.Z;
 
             return (float)Math.Sqrt(xDelta * xDelta + yDelta * yDelta + zDelta * zDelta);
+        }
+
+        public PointF GetProjection(int projIndex, int w, int h)
+        {
+            PointF res = new PointF(0, 0);
+
+            switch (projIndex)
+            {
+                // Перспективная проекция
+                case 0:
+                    Vertex v = new Vertex(X - w, Y - h, Z);
+                    Matrix<float> m = new float[4, 4] {
+                        { 1, 0, 0, 0 },
+                        { 0, 1, 0, 0 },
+                        { 0, 0, 0, 1.0f / 400 },
+                        { 0, 0, 0, 1 }
+                    };
+                    Matrix<float> m1 = v * m;
+                    v = new Vertex(m1[0, 0] / m1[0, 3], m1[0, 1] / m1[0, 3], m1[0, 2] / m1[0, 3]);
+                    res = new PointF(v.X + w, v.Y + h);
+                    break;
+                // Аксонометрическая проекция
+                case 1:
+
+                    break;
+            }
+
+            return res;
         }
     }
 
