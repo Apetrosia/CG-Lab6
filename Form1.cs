@@ -226,7 +226,7 @@ namespace CG_Lab
                     break;
                 case (int)AffineOp.LineRotation:
                     anchor = new Vertex((float)numericUpDown4.Value, (float)numericUpDown5.Value, (float)numericUpDown6.Value);
-                    Vertex v = new Vertex((float)numericUpDown12.Value - anchor.X, (float)numericUpDown11.Value - anchor.Y, (float)numericUpDown10.Value - anchor.Z);
+                    Vertex v = new Vertex(anchor.X - (float)numericUpDown12.Value, anchor.Y - (float)numericUpDown11.Value, anchor.Z - (float)numericUpDown10.Value);
                     float length = (float)Math.Sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z);
                     float l = v.X / length;
                     float m = v.Y / length;
