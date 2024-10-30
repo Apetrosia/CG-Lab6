@@ -270,10 +270,10 @@ namespace CG_Lab
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             float scaleFactor = (float)numericScale.Value;
-            g.Clear(Color.White);
+            g.Clear(pictureBox1.BackColor);
 
 
-            PolyHedron cube = currPolyHedron;
+            PolyHedron cube = currentPolyhedron;
 
 
             cube = cube.ScaledAroundCenter(scaleFactor, scaleFactor, scaleFactor);
