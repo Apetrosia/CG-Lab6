@@ -39,8 +39,6 @@
             this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
-            this.button1 = new System.Windows.Forms.Button();
-            this.projectionButton = new System.Windows.Forms.Button();
             this.projectionListBox = new System.Windows.Forms.ComboBox();
             this.axisXNumeric = new System.Windows.Forms.NumericUpDown();
             this.axisYNumeric = new System.Windows.Forms.NumericUpDown();
@@ -57,6 +55,10 @@
             this.numericUpDown12 = new System.Windows.Forms.NumericUpDown();
             this.labelScale = new System.Windows.Forms.Label();
             this.numericScale = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -177,8 +179,10 @@
             "Смещение",
             "Масштабирование",
             "Поворот",
-            "Вращение вокруг прямой",
-            "Вращение вокруг оси"});
+            "Поворот вокруг прямой",
+            "Вращение параллельно OX",
+            "Вращение параллельно OY",
+            "Вращение параллельно OZ"});
             this.comboBox2.Location = new System.Drawing.Point(1113, 303);
             this.comboBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBox2.Name = "comboBox2";
@@ -253,25 +257,6 @@
             this.numericUpDown6.Size = new System.Drawing.Size(86, 26);
             this.numericUpDown6.TabIndex = 7;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(0, 0);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // projectionButton
-            // 
-            this.projectionButton.Location = new System.Drawing.Point(1206, 722);
-            this.projectionButton.Name = "projectionButton";
-            this.projectionButton.Size = new System.Drawing.Size(147, 34);
-            this.projectionButton.TabIndex = 11;
-            this.projectionButton.Text = "Применить";
-            this.projectionButton.UseVisualStyleBackColor = true;
-            this.projectionButton.Click += new System.EventHandler(this.projectionButton_Click);
-            // 
             // projectionListBox
             // 
             this.projectionListBox.FormattingEnabled = true;
@@ -279,12 +264,13 @@
             "Перспективная",
             "Ортографическая",
             "Аксонометрическая"});
-            this.projectionListBox.Location = new System.Drawing.Point(1185, 611);
+            this.projectionListBox.Location = new System.Drawing.Point(1138, 611);
             this.projectionListBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.projectionListBox.Name = "projectionListBox";
-            this.projectionListBox.Size = new System.Drawing.Size(180, 28);
+            this.projectionListBox.Size = new System.Drawing.Size(280, 28);
             this.projectionListBox.TabIndex = 12;
             this.projectionListBox.Text = "Перспективная";
+            this.projectionListBox.SelectedIndexChanged += new System.EventHandler(this.projectionListBox_SelectedIndexChanged);
             // 
             // axisXNumeric
             // 
@@ -304,6 +290,11 @@
             this.axisXNumeric.Name = "axisXNumeric";
             this.axisXNumeric.Size = new System.Drawing.Size(90, 26);
             this.axisXNumeric.TabIndex = 15;
+            this.axisXNumeric.Value = new decimal(new int[] {
+            120,
+            0,
+            0,
+            0});
             this.axisXNumeric.ValueChanged += new System.EventHandler(this.axisXNumeric_ValueChanged);
             // 
             // axisYNumeric
@@ -324,6 +315,11 @@
             this.axisYNumeric.Name = "axisYNumeric";
             this.axisYNumeric.Size = new System.Drawing.Size(88, 26);
             this.axisYNumeric.TabIndex = 14;
+            this.axisYNumeric.Value = new decimal(new int[] {
+            120,
+            0,
+            0,
+            0});
             this.axisYNumeric.ValueChanged += new System.EventHandler(this.axisYNumeric_ValueChanged);
             // 
             // axisZNumeric
@@ -345,6 +341,11 @@
             this.axisZNumeric.ReadOnly = true;
             this.axisZNumeric.Size = new System.Drawing.Size(86, 26);
             this.axisZNumeric.TabIndex = 13;
+            this.axisZNumeric.Value = new decimal(new int[] {
+            120,
+            0,
+            0,
+            0});
             // 
             // label2
             // 
@@ -498,11 +499,48 @@
             0});
             this.numericScale.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(1230, 218);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(123, 20);
+            this.label8.TabIndex = 26;
+            this.label8.Text = "Центр фигуры:";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(1139, 260);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(86, 26);
+            this.textBox1.TabIndex = 27;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(1240, 260);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.Size = new System.Drawing.Size(86, 26);
+            this.textBox2.TabIndex = 28;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(1332, 260);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.ReadOnly = true;
+            this.textBox3.Size = new System.Drawing.Size(86, 26);
+            this.textBox3.TabIndex = 29;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1444, 925);
+            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.numericUpDown10);
             this.Controls.Add(this.numericUpDown11);
@@ -517,8 +555,6 @@
             this.Controls.Add(this.axisYNumeric);
             this.Controls.Add(this.axisZNumeric);
             this.Controls.Add(this.projectionListBox);
-            this.Controls.Add(this.projectionButton);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.numericUpDown4);
             this.Controls.Add(this.numericUpDown5);
             this.Controls.Add(this.numericUpDown6);
@@ -567,8 +603,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDown4;
         private System.Windows.Forms.NumericUpDown numericUpDown5;
         private System.Windows.Forms.NumericUpDown numericUpDown6;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button projectionButton;
         private System.Windows.Forms.ComboBox projectionListBox;
         private System.Windows.Forms.NumericUpDown axisXNumeric;
         private System.Windows.Forms.NumericUpDown axisYNumeric;
@@ -585,6 +619,10 @@
         private System.Windows.Forms.NumericUpDown numericUpDown12;
         private System.Windows.Forms.Label labelScale;
         private System.Windows.Forms.NumericUpDown numericScale;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox3;
     }
 }
 
