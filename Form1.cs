@@ -15,12 +15,11 @@ namespace CG_Lab
 
         private enum AffineOp { Move = 0, Scaling, Rotation, LineRotation, AxisXRotation, AxisYRotation, AxisZRotation }
 
-        private enum Operation { DrawCube = 0, Reflect_XY = 1, Reflect_YZ = 2, Reflect_XZ = 3, ScaleCenter = 4 }
-        PolyHedron currPolyHedron = null;
+        private enum Operation { Reflect_XY = 0, Reflect_YZ = 1, Reflect_XZ = 2 }
+
         Graphics g;
 
         string currPlane = "XY";
-        int currProj = 1;
         Pen defaultPen = new Pen(Color.Black, 3);
 
         PolyHedron currentPolyhedron;
@@ -47,34 +46,40 @@ namespace CG_Lab
             return new PointF(v.X, v.Y);
         }
 
-        private void DrawPolyhedron(PolyHedron polyhedron, string plane, int proj = 0)
+        private void DrawPolyhedron(PolyHedron polyhedron, string plane)
         {
+            float scaleFactor = (float)numericScale.Value;
+            g.Clear(pictureBox1.BackColor);
+
+            PolyHedron ph = polyhedron.ScaledAroundCenter(scaleFactor, scaleFactor, scaleFactor);
+
             float centerY = pictureBox1.Height / 2;
 
-            foreach (var face in polyhedron.Faces)
+            foreach (var face in ph.Faces)
             {
                 var points = new List<PointF>();
 
                 foreach (var vertexIndex in face.Vertices)
                 {
-                    Vertex v = polyhedron.Vertices[vertexIndex];
+                    Vertex v = ph.Vertices[vertexIndex];
 
                     //points.Add(ProjectParallel(v));
                     Vertex projectedVertex;
-                    switch (plane)
+                    /*switch (plane)
                     {
                         case "XY":
                             projectedVertex = new Vertex(v.X, v.Y, v.Z);
                             break;
                         case "YZ":
-                            projectedVertex = new Vertex(v.Y, v.Z + centerY, v.X);
+                            projectedVertex = new Vertex(v.Y, v.Z , v.X);
                             break;
                         case "XZ":
-                            projectedVertex = new Vertex(v.X, v.Z + centerY, v.Z);
+                            projectedVertex = new Vertex(v.X, v.Z , v.Y);
                             break;
                         default:
                             throw new ArgumentException("Invalid plane. Use 'XY', 'YZ', or 'XZ'.");
-                    }
+                    }*/
+                    projectedVertex = new Vertex(v.X, v.Y, v.Z);
                     //PointF projectedPoint = new PointF(projectedVertex.X, projectedVertex.Y);
                     PointF projectedPoint = projectedVertex.GetProjection(projectionListBox.SelectedIndex, pictureBox1.Width / 2, pictureBox1.Height / 2,
                         (float)axisXNumeric.Value, (float)axisYNumeric.Value);
@@ -110,7 +115,7 @@ namespace CG_Lab
             {
                 case (int)RenderingOp.DrawCube:
                     DrawPolyhedron(currentPolyhedron = PolyHedron.GetCube()
-                                             .Rotated(20, 20, 0)
+                                             //.Rotated(20, 20, 0)
                                              .Scaled(100, 100, 100)
                                              .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0),
                                              currPlane);
@@ -154,16 +159,25 @@ namespace CG_Lab
             switch (reflectionComboBox.SelectedIndex)
             {
                 case (int)Operation.Reflect_XY:
-                    DrawPolyhedron(currentPolyhedron, "XY");
                     currPlane = "XY";
+                    currentPolyhedron = currentPolyhedron.Moved(-pictureBox1.Width / 2, -pictureBox1.Height / 2, 0)
+                        .Reflected("XY")
+                        .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0);
+                    DrawPolyhedron(currentPolyhedron, "XY");
                     break;
                 case (int)Operation.Reflect_YZ:
-                    DrawPolyhedron(currentPolyhedron, "YZ");
                     currPlane = "YZ";
+                    currentPolyhedron = currentPolyhedron.Moved(-pictureBox1.Width / 2, -pictureBox1.Height / 2, 0)
+                        .Reflected("YZ")
+                        .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0);
+                    DrawPolyhedron(currentPolyhedron, "YZ");
                     break;
                 case (int)Operation.Reflect_XZ:
-                    DrawPolyhedron(currentPolyhedron, "XZ");
                     currPlane = "XZ";
+                    currentPolyhedron = currentPolyhedron.Moved(-pictureBox1.Width / 2, -pictureBox1.Height / 2, 0)
+                        .Reflected("XZ")
+                        .Moved(pictureBox1.Width / 2, pictureBox1.Height / 2, 0);
+                    DrawPolyhedron(currentPolyhedron, "XZ");
                     break;
             }
         }
@@ -218,6 +232,7 @@ namespace CG_Lab
                     float m = v.Y / length;
                     float n = v.Z / length;
 
+                    /*
                     DrawPolyhedron(currentPolyhedron = currentPolyhedron
                                                        .Moved(-anchor.X, -anchor.Y, -anchor.Z)
                                                        .ApplyRx(l, m, n)
@@ -227,6 +242,12 @@ namespace CG_Lab
                                                        .ApplyRx(l, m, n, true)
                                                        .Moved(anchor.X, anchor.Y, anchor.Z),
                                                        currPlane);
+                    */
+                    DrawPolyhedron(currentPolyhedron = currentPolyhedron
+                        .Moved(-anchor.X, -anchor.Y, -anchor.Z)
+                        .LineRotated(l, m, n, (float)numericUpDown1.Value)
+                        .Moved(anchor.X, anchor.Y, anchor.Z),
+                        currPlane);
                     break;
                 case (int)AffineOp.AxisXRotation:
                     centerX = 0;
@@ -269,25 +290,19 @@ namespace CG_Lab
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-            float scaleFactor = (float)numericScale.Value;
-            g.Clear(pictureBox1.BackColor);
-
-
-            PolyHedron cube = currentPolyhedron;
-
-
-            cube = cube.ScaledAroundCenter(scaleFactor, scaleFactor, scaleFactor);
-            DrawPolyhedron(cube, currPlane);
+            DrawPolyhedron(currentPolyhedron, currPlane);
         }
 
         private void axisXNumeric_ValueChanged(object sender, EventArgs e)
         {
             axisZNumeric.Value = 360 - axisXNumeric.Value - axisYNumeric.Value;
+            DrawPolyhedron(currentPolyhedron, currPlane);
         }
 
         private void axisYNumeric_ValueChanged(object sender, EventArgs e)
         {
             axisZNumeric.Value = 360 - axisXNumeric.Value - axisYNumeric.Value;
+            DrawPolyhedron(currentPolyhedron, currPlane);
         }
 
         private void projectionListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -487,6 +502,31 @@ namespace CG_Lab
             a /= vertices.Count;
             b /= vertices.Count;
             c /= vertices.Count;
+        }
+
+        public PolyHedron LineRotated(float l, float m, float n, float angle)
+        {
+            var newPoly = this.Clone();
+
+            double angleRadians = (double)angle * (Math.PI / 180);
+
+            float cos = (float)Math.Cos(angleRadians);
+            float sin = (float)Math.Sin(angleRadians);
+
+            Matrix<float> RxMatrix = new float[4, 4]
+            {
+                { l*l+cos*(1-l*l), l*(1-cos)*m+n*sin,  l*(1-cos)*n-m*sin,  0 },
+                { l*(1-cos)*m-n*sin, m*m+cos*(1-m*m), m*(1-cos)*n+l*sin,  0 },
+                { l*(1-cos)*n+m*sin, m*(1-cos)*n-l*sin,  n*n+cos*(1-n*n),  0 },
+                { 0,  0,  0,  1 }
+            };
+
+            for (int i = 0; i < newPoly.Vertices.Count; i++)
+            {
+                newPoly.Vertices[i] *= RxMatrix;
+            }
+
+            return newPoly;
         }
 
         public PolyHedron ApplyRx(float l, float m, float n, bool reverse = false)
